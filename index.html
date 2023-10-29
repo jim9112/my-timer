@@ -24,7 +24,7 @@
         let endTime = Date.now();
         let startTime = this.lastBlock !== 0 ? this.lastBlock : this.dayStart;
         this.todaysBlocks.push({
-          title: 'Block ' + this.todaysBlocks.length + 1,
+          title: 'Block ' + (parseInt(this.todaysBlocks.length) + parseInt(1)),
           start: startTime,
           end: endTime,
           totalseconds: Math.round((endTime - startTime) / 1000),
@@ -32,9 +32,23 @@
         this.lastBlock = endTime;
         console.log(this.todaysBlocks);
       },
+      outputTime(timeElapsed) {
+        console.log(timeElapsed);
+        return new Date(timeElapsed * 1000).toISOString().substring(11, 19);
+      },
     }" class="timer-container">
       <button x-show="dayStarted === false" x-on:click="startDay()" class="border-2 border-black rounded-md px-1 py-1" type="button">Start Day</button>
       <button x-show="dayStarted === true" x-on:click="recordBlock()" class="border-2 border-black rounded-md px-1 py-1" type="button">Record Block</button>
+      <ul>
+        <template x-for="(block, index) in todaysBlocks">
+          <li x-data="{ edit: false }">
+            <div>
+              <button x-on:click="edit = true" class="border-2 border-black rounded-md px-1 py-1" type="button">Edit</button><span x-text="block.title + ' ' + outputTime(block.totalseconds)"></span>
+            </div>
+            <div x-show="edit === true"><button class="border-2 border-black rounded-md px-1 py-1" type="button" x-on:click="edit = false">Save</button><input @keyup.enter="edit = false" type="text" name="block label" x-model="block.title"></div>
+          </li>
+        </template>
+      </ul>
     </div>
     <script type="module" src="/src/renderer.ts"></script>
   </body>
