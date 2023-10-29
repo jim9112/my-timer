@@ -25,7 +25,11 @@
  *  });
  * ```
  */
+import Alpine from 'alpinejs';
 
+window.Alpine = Alpine;
+
+Alpine.start();
 import './index.css';
 
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
