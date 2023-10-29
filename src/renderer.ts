@@ -27,7 +27,46 @@
  */
 import Alpine from 'alpinejs';
 
-Alpine.start();
-import './index.css';
 
+import './index.css';
+const testMe = () => {
+    console.log('test me');
+}
+ document.addEventListener('alpine:init', () => {
+    console.log('init');
+   Alpine.data('timeData', () => ({
+     dayStart: 0,
+     lastBlock: 0,
+     dayStarted: false,
+     todaysBlocks: [],
+     startDay() {
+       this.dayStart = Date.now();
+       this.dayStarted = true;
+       console.log(this.dayStart);
+     },
+     recordBlock() {
+       const endTime = Date.now();
+       const startTime = this.lastBlock !== 0 ? this.lastBlock : this.dayStart;
+       this.todaysBlocks.push({
+         title: 'Block ' + (parseInt(this.todaysBlocks.length) + parseInt(1)),
+         start: startTime,
+         end: endTime,
+         totalseconds: Math.round((endTime - startTime) / 1000),
+       });
+       this.lastBlock = endTime;
+       console.log(this.todaysBlocks);
+       testMe();
+     },
+     outputTime(timeElapsed: number) {
+       return new Date(timeElapsed * 1000).toISOString().substring(11, 19);
+     },
+     resetDay() {
+       this.dayStart = 0;
+       this.lastBlock = 0;
+       this.dayStarted = false;
+       this.todaysBlocks = [];
+     },
+   }));
+ });   
+ Alpine.start();
 console.log('👋 This message is being logged by "renderer.ts", included via Vite');
