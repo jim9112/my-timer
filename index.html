@@ -2,12 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Hello World!</title>
+    <title>Jimmy's Time Keeper</title>
 
   </head>
   <body>
-    <h1 class="text-3xl font-bold underline">💖 Hello World!</h1>
-    <h2 x-data="{ message: 'I ❤️ Alpine' }" x-text="message"></h2>
+    <h1 class="text-3xl font-bold">Record Your Time</h1>
     <!-- <div>
       <span>Hours:</span><span id="hours">00</span><span>Minutes</span><span id="minutes">00</span><span>Seconds</span><span id="seconds">00</span>
     </div> -->
@@ -37,7 +36,6 @@
       <button x-show="dayStarted === false" x-on:click="startDay()" class="border-2 border-black rounded-md px-1 py-1" type="button">Start Day</button>
       <button x-show="dayStarted === true" x-on:click="recordBlock()" class="border-2 border-black rounded-md px-1 py-1" type="button">Record Block</button>
     </div>
-    <p>Welcome to your Electron application.</p>
     <script type="module" src="/src/renderer.ts"></script>
   </body>
 </html>
