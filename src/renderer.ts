@@ -26,7 +26,17 @@
  * ```
  */
 import Alpine from 'alpinejs';
-
+import { addRxPlugin, createRxDatabase } from 'rxdb';
+import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
+addRxPlugin(RxDBDevModePlugin);
+import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
+const createDb = async () => {
+    const timerDatabase = await createRxDatabase({
+    name: 'timerdatabase',
+    storage: getRxStorageDexie(),
+    });
+}
+createDb();
 
 import './index.css';
 const testMe = () => {
