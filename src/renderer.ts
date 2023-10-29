@@ -47,8 +47,9 @@ const testMe = () => {
      recordBlock() {
        const endTime = Date.now();
        const startTime = this.lastBlock !== 0 ? this.lastBlock : this.dayStart;
+       const blockNum = this.todaysBlocks.length + 1;
        this.todaysBlocks.push({
-         title: 'Block ' + (parseInt(this.todaysBlocks.length) + parseInt(1)),
+         title: `Block ${blockNum}`,
          start: startTime,
          end: endTime,
          totalseconds: Math.round((endTime - startTime) / 1000),
