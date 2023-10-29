@@ -28,7 +28,7 @@
           title: 'Block ' + this.todaysBlocks.length + 1,
           start: startTime,
           end: endTime,
-          totalMiliseconds: endTime - startTime,
+          totalseconds: Math.round((endTime - startTime) / 1000),
         });
         this.lastBlock = endTime;
         console.log(this.todaysBlocks);
