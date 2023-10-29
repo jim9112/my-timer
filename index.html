@@ -6,7 +6,7 @@
 
   </head>
   <body>
-    <h1 class="text-3xl font-bold">Record Your Time</h1>
+    
     <!-- <div>
       <span>Hours:</span><span id="hours">00</span><span>Minutes</span><span id="minutes">00</span><span>Seconds</span><span id="seconds">00</span>
     </div> -->
@@ -36,12 +36,13 @@
         console.log(timeElapsed);
         return new Date(timeElapsed * 1000).toISOString().substring(11, 19);
       },
-    }" class="timer-container">
+    }" class="h-screen flex flex-col px-4 pt-5">
+    <h1 class="text-3xl font-bold">Record Your Time</h1>
       <button x-show="dayStarted === false" x-on:click="startDay()" class="border-2 border-black rounded-md px-1 py-1" type="button">Start Day</button>
       <button x-show="dayStarted === true" x-on:click="recordBlock()" class="border-2 border-black rounded-md px-1 py-1" type="button">Record Block</button>
-      <ul>
+      <ul class="flex-1 overflow-y-scroll">
         <template x-for="(block, index) in todaysBlocks">
-          <li x-data="{ edit: false }">
+          <li class="border-b-2 border-black" x-data="{ edit: false }">
             <div>
               <button x-on:click="edit = true" class="border-2 border-black rounded-md px-1 py-1" type="button">Edit</button><span x-text="block.title + ' ' + outputTime(block.totalseconds)"></span>
             </div>
@@ -49,6 +50,11 @@
           </li>
         </template>
       </ul>
+      <div class="flex justify-evenly pb-3">
+        <button class="border-2 border-black rounded-md px-1 py-1" type="button">Finish My Day</button>
+        <button class="border-2 border-black rounded-md px-1 py-1" type="button">Reset My Day</button>
+        <button class="border-2 border-black rounded-md px-1 py-1" type="button">Take a Break</button>
+      </div>
     </div>
     <script type="module" src="/src/renderer.ts"></script>
   </body>
