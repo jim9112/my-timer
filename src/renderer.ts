@@ -30,15 +30,20 @@ import { addRxPlugin, createRxDatabase } from 'rxdb';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 addRxPlugin(RxDBDevModePlugin);
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
-const createDb = async () => {
-    const timerDatabase = await createRxDatabase({
+import { daySchema } from './schema/day-schema';
+import './index.css';
+// ****** To Do: start removing buisness logic from render module ********
+// Create Database
+const createDatabase = async () => {
+    return await createRxDatabase({
     name: 'timerdatabase',
     storage: getRxStorageDexie(),
     });
-}
-createDb();
+  }
+const timerDatabase = createDatabase();
+// Schema for day collection
+console.log(daySchema);
 
-import './index.css';
 const testMe = () => {
     console.log('test me');
 }
