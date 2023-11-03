@@ -15,9 +15,6 @@ const daySchema = {
     lastBlock: {
       type: 'number',
     },
-    dayStarted: {
-      type: 'boolean',
-    },
     todaysBlocks: {
       type: 'array',
       items: {

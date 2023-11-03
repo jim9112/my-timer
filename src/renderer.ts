@@ -26,7 +26,14 @@
  * ```
  */
 import Alpine from 'alpinejs';
-import { addRxPlugin, createRxDatabase } from 'rxdb';
+import {
+  addRxPlugin,
+  createRxDatabase,
+  RxDatabase,
+  RxCollection,
+  RxJsonSchema,
+  RxDocument,
+} from 'rxdb';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 addRxPlugin(RxDBDevModePlugin);
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
@@ -34,30 +41,40 @@ import { daySchema } from './schema/day-schema';
 import './index.css';
 // ****** To Do: start removing buisness logic from render module ********
 // Create Database
-const createDatabase = async () => {
-    return await createRxDatabase({
-    name: 'timerdatabase',
-    storage: getRxStorageDexie(),
-    });
-  }
-const timerDatabase = createDatabase();
+const timerDatabase = await createRxDatabase({
+  name: 'timerdatabase',
+  storage: getRxStorageDexie(),
+});
+await timerDatabase.addCollections({
+  days: {
+    schema: daySchema,
+  },
+});
+console.log(timerDatabase.days.name);
 // Schema for day collection
-console.log(daySchema);
-
 const testMe = () => {
     console.log('test me');
 }
  document.addEventListener('alpine:init', () => {
     console.log('init');
    Alpine.data('timeData', () => ({
+    id: "",
      dayStart: 0,
      lastBlock: 0,
      dayStarted: false,
      todaysBlocks: [],
-     startDay() {
+     async startDay () {
        this.dayStart = Date.now();
        this.dayStarted = true;
-       console.log(this.dayStart);
+       this.id = new Date(this.dayStart).toDateString().replaceAll(" ", "-");
+      await timerDatabase.days.insert({
+        id: this.id,
+        datStart: this.dayStart,
+      });
+      const foundDocument = await timerDatabase.days
+        .findOne(this.id)
+        .exec();
+       console.log(foundDocument._data);
      },
      recordBlock() {
        const endTime = Date.now();
