@@ -20,7 +20,7 @@
             <div>
               <button x-on:click="edit = true" class="px-1 py-1 mr-2 border-2 border-black rounded-md" type="button">Edit</button><span x-text="block.title + ' ' + outputTime(block.totalseconds)"></span>
             </div>
-            <div x-show="edit === true"><button class="px-1 py-1 mr-2 border-2 border-black rounded-md" type="button" x-on:click="edit = false">Save</button><input @keyup.enter="edit = false" type="text" name="block label" x-model="block.title"></div>
+            <div x-show="edit === true"><button class="px-1 py-1 mr-2 border-2 border-black rounded-md" type="button" x-on:click="edit = false;saveChanges;console.log(block.title)">Save</button><input @keyup.enter="edit = false" type="text" name="block label" x-model="block.title"></div>
           </li>
         </template>
       </ul>

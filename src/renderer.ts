@@ -51,6 +51,12 @@ await timerDatabase.addCollections({
 });
 const today = getDateString();
 const startingData = await timerDatabase.days.findOne(today).exec();
+const startingBlocks: object[] = [];
+if (startingData?._data?.todaysBlocks) {
+  startingData._data.todaysBlocks.forEach((block: any) => {
+    startingBlocks.push({...block});
+  });
+}
 console.log(startingData?._data?.todaysBlocks);
  document.addEventListener('alpine:init', () => {
    Alpine.data('timeData', () => ({
@@ -58,7 +64,8 @@ console.log(startingData?._data?.todaysBlocks);
      dayStart: startingData?._data?.dayStart || 0,
      lastBlock: startingData?._data?.lastBlock || 0,
      dayStarted: startingData?._data?.dayStarted || false,
-     todaysBlocks: startingData._data.todaysBlocks ? [...startingData._data.todaysBlocks] :  [],
+     todaysBlocks: [...startingBlocks],
+    //  todaysBlocks: startingData._data.todaysBlocks ? [...startingData._data.todaysBlocks] :  [],
      async startDay() {
        this.dayStart = Date.now();
        this.dayStarted = true;
@@ -93,6 +100,15 @@ console.log(startingData?._data?.todaysBlocks);
      },
      outputTime(timeElapsed: number) {
        return new Date(timeElapsed * 1000).toISOString().substring(11, 19);
+     },
+     async saveChanges() {
+      const foundDocument = await timerDatabase.days.findOne(this.id).exec();
+      await foundDocument?.update({
+        $set: {
+          todaysBlocks: this.todaysBlocks,
+        },
+      });
+      console.log('save changes');
      },
      resetDay() {
        this.dayStart = 0;
