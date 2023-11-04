@@ -36,7 +36,6 @@ import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { daySchema } from './schema/day-schema';
 import { getDateString } from './helpers/dates';
 import './index.css';
-console.log(getDateString());
 // ****** To Do: start removing buisness logic from render module ********
 // Create Database
 const timerDatabase = await createRxDatabase({
@@ -50,11 +49,7 @@ await timerDatabase.addCollections({
 });
 const today = getDateString();
 const startingData = await timerDatabase.days.findOne(today).exec();
-const testMe = () => {
-    console.log('test me');
-}
  document.addEventListener('alpine:init', () => {
-   
    Alpine.data('timeData', () => ({
      id: startingData?._data?.id || '',
      dayStart: startingData?._data?.dayStart || 0,
@@ -72,8 +67,6 @@ const testMe = () => {
            datStart: this.dayStart,
            dayStarted: this.dayStarted,
          });
-         const foundDocument = await timerDatabase.days.findOne(this.id).exec();
-         console.log(foundDocument._data);
        }
      },
      recordBlock() {
@@ -87,8 +80,6 @@ const testMe = () => {
          totalseconds: Math.round((endTime - startTime) / 1000),
        });
        this.lastBlock = endTime;
-       console.log(this.todaysBlocks);
-       testMe();
      },
      outputTime(timeElapsed: number) {
        return new Date(timeElapsed * 1000).toISOString().substring(11, 19);
@@ -102,4 +93,3 @@ const testMe = () => {
    }));
  });   
  Alpine.start();
- 
