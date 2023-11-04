@@ -10,11 +10,11 @@ const config: ForgeConfig = {
       config: {
         repository: {
           owner: 'jim9112',
-          name: 'my-timer'
+          name: 'my-timer',
         },
-        prerelease: true
-      }
-    }
+        prerelease: true,
+      },
+    },
   ],
   makers: [
     {
