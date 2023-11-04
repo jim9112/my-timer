@@ -32,6 +32,8 @@ import {
 } from 'rxdb';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 addRxPlugin(RxDBDevModePlugin);
+import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
+addRxPlugin(RxDBUpdatePlugin);
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { daySchema } from './schema/day-schema';
 import { getDateString } from './helpers/dates';
@@ -69,7 +71,7 @@ const startingData = await timerDatabase.days.findOne(today).exec();
          });
        }
      },
-     recordBlock() {
+     async recordBlock() {
        const endTime = Date.now();
        const startTime = this.lastBlock !== 0 ? this.lastBlock : this.dayStart;
        const blockNum = this.todaysBlocks.length + 1;
@@ -80,6 +82,13 @@ const startingData = await timerDatabase.days.findOne(today).exec();
          totalseconds: Math.round((endTime - startTime) / 1000),
        });
        this.lastBlock = endTime;
+       const foundDocument = await timerDatabase.days.findOne(this.id).exec();
+       await foundDocument?.update({
+          $set: {
+            lastBlock: this.lastBlock,
+            todaysBlocks: this.todaysBlocks,
+          },
+       });
      },
      outputTime(timeElapsed: number) {
        return new Date(timeElapsed * 1000).toISOString().substring(11, 19);
