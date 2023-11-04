@@ -57,29 +57,25 @@ const testMe = () => {
  document.addEventListener('alpine:init', () => {
    
    Alpine.data('timeData', () => ({
-    id: "",
-     dayStart: 0,
-     lastBlock: 0,
+     id: startingData._data.id || '',
+     dayStart: startingData._data.dayStart || 0,
+     lastBlock: startingData._data.lastBlock || 0,
      dayStarted: startingData._data.dayStarted || false,
      todaysBlocks: [],
-     async startDay () {
+     async startDay() {
        this.dayStart = Date.now();
        this.dayStarted = true;
        this.id = getDateString();
-       const foundDocument = await timerDatabase.days
-       .findOne(this.id)
-       .exec();
+       const foundDocument = await timerDatabase.days.findOne(this.id).exec();
        if (!foundDocument) {
          await timerDatabase.days.insert({
            id: this.id,
            datStart: this.dayStart,
            dayStarted: this.dayStarted,
-          });
-          const foundDocument = await timerDatabase.days
-            .findOne(this.id)
-            .exec();
-          console.log(foundDocument._data);
-      }
+         });
+         const foundDocument = await timerDatabase.days.findOne(this.id).exec();
+         console.log(foundDocument._data);
+       }
      },
      recordBlock() {
        const endTime = Date.now();
