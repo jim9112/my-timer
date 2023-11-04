@@ -1,18 +1,12 @@
 import Alpine from 'alpinejs';
 import { getDateString } from './helpers/dates';
 import './index.css';
-import { timerDatabase } from './helpers/db';
-// ****** To Do: start removing buisness logic from render module ********
-const today = getDateString();
-// Check for current day in database
-const startingData = await timerDatabase.days.findOne(today).exec();
-// generate a starting bock array that doesn't have direct references to the database
-const startingBlocks: object[] = [];
-if (startingData?._data?.todaysBlocks) {
-  startingData._data.todaysBlocks.forEach((block: any) => {
-    startingBlocks.push({...block});
-  });
-}
+import {
+  createDb,
+  timerDatabase,
+  startingData,
+  startingBlocks,
+} from './helpers/db';
  document.addEventListener('alpine:init', () => {
    Alpine.data('timeData', () => ({
      id: startingData?._data?.id || '',
@@ -70,5 +64,9 @@ if (startingData?._data?.todaysBlocks) {
        this.todaysBlocks = [];
      },
    }));
- });   
- Alpine.start();
+ });  
+ const startApp = async () => {
+    await createDb();
+    Alpine.start();
+  } 
+  startApp();
