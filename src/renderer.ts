@@ -29,16 +29,14 @@ import Alpine from 'alpinejs';
 import {
   addRxPlugin,
   createRxDatabase,
-  RxDatabase,
-  RxCollection,
-  RxJsonSchema,
-  RxDocument,
 } from 'rxdb';
 import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
 addRxPlugin(RxDBDevModePlugin);
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
 import { daySchema } from './schema/day-schema';
+import { getDateString } from './helpers/dates';
 import './index.css';
+console.log(getDateString());
 // ****** To Do: start removing buisness logic from render module ********
 // Create Database
 const timerDatabase = await createRxDatabase({
@@ -50,32 +48,37 @@ await timerDatabase.addCollections({
     schema: daySchema,
   },
 });
-console.log(timerDatabase.days.name);
-// Schema for day collection
+const today = getDateString();
+const startingData = await timerDatabase.days.findOne(today).exec();
+console.log(startingData._data);
 const testMe = () => {
     console.log('test me');
 }
  document.addEventListener('alpine:init', () => {
-    console.log('init');
+   
    Alpine.data('timeData', () => ({
     id: "",
      dayStart: 0,
      lastBlock: 0,
-     dayStarted: false,
+     dayStarted: startingData._data.dayStarted || false,
      todaysBlocks: [],
      async startDay () {
        this.dayStart = Date.now();
        this.dayStarted = true;
-       this.id = new Date(this.dayStart).toDateString().replaceAll(" ", "-");
+       this.id = getDateString();
        const foundDocument = await timerDatabase.days
        .findOne(this.id)
        .exec();
        if (!foundDocument) {
-        await timerDatabase.days.insert({
-         id: this.id,
-         datStart: this.dayStart,
-       });
-       console.log(foundDocument._data);
+         await timerDatabase.days.insert({
+           id: this.id,
+           datStart: this.dayStart,
+           dayStarted: this.dayStarted,
+          });
+          const foundDocument = await timerDatabase.days
+            .findOne(this.id)
+            .exec();
+          console.log(foundDocument._data);
       }
      },
      recordBlock() {

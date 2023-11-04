@@ -12,6 +12,9 @@ const daySchema = {
     dayStart: {
       type: 'number',
     },
+    dayStarted: {
+        type: 'boolean',
+        },
     lastBlock: {
       type: 'number',
     },
