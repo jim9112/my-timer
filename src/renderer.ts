@@ -67,14 +67,16 @@ const testMe = () => {
        this.dayStart = Date.now();
        this.dayStarted = true;
        this.id = new Date(this.dayStart).toDateString().replaceAll(" ", "-");
-      await timerDatabase.days.insert({
-        id: this.id,
-        datStart: this.dayStart,
-      });
-      const foundDocument = await timerDatabase.days
-        .findOne(this.id)
-        .exec();
+       const foundDocument = await timerDatabase.days
+       .findOne(this.id)
+       .exec();
+       if (!foundDocument) {
+        await timerDatabase.days.insert({
+         id: this.id,
+         datStart: this.dayStart,
+       });
        console.log(foundDocument._data);
+      }
      },
      recordBlock() {
        const endTime = Date.now();
