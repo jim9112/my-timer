@@ -1,63 +1,18 @@
-/**
- * This file will automatically be loaded by vite and run in the "renderer" context.
- * To learn more about the differences between the "main" and the "renderer" context in
- * Electron, visit:
- *
- * https://electronjs.org/docs/tutorial/application-architecture#main-and-renderer-processes
- *
- * By default, Node.js integration in this file is disabled. When enabling Node.js integration
- * in a renderer process, please be aware of potential security implications. You can read
- * more about security risks here:
- *
- * https://electronjs.org/docs/tutorial/security
- *
- * To enable Node.js integration in this file, open up `main.ts` and enable the `nodeIntegration`
- * flag:
- *
- * ```
- *  // Create the browser window.
- *  mainWindow = new BrowserWindow({
- *    width: 800,
- *    height: 600,
- *    webPreferences: {
- *      nodeIntegration: true
- *    }
- *  });
- * ```
- */
 import Alpine from 'alpinejs';
-import {
-  addRxPlugin,
-  createRxDatabase,
-} from 'rxdb';
-import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
-addRxPlugin(RxDBDevModePlugin);
-import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
-addRxPlugin(RxDBUpdatePlugin);
-import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
-import { daySchema } from './schema/day-schema';
 import { getDateString } from './helpers/dates';
 import './index.css';
+import { timerDatabase } from './helpers/db';
 // ****** To Do: start removing buisness logic from render module ********
-// Create Database
-const timerDatabase = await createRxDatabase({
-  name: 'timerdatabase',
-  storage: getRxStorageDexie(),
-});
-await timerDatabase.addCollections({
-  days: {
-    schema: daySchema,
-  },
-});
 const today = getDateString();
+// Check for current day in database
 const startingData = await timerDatabase.days.findOne(today).exec();
+// generate a starting bock array that doesn't have direct references to the database
 const startingBlocks: object[] = [];
 if (startingData?._data?.todaysBlocks) {
   startingData._data.todaysBlocks.forEach((block: any) => {
     startingBlocks.push({...block});
   });
 }
-console.log(startingData?._data?.todaysBlocks);
  document.addEventListener('alpine:init', () => {
    Alpine.data('timeData', () => ({
      id: startingData?._data?.id || '',
@@ -65,7 +20,6 @@ console.log(startingData?._data?.todaysBlocks);
      lastBlock: startingData?._data?.lastBlock || 0,
      dayStarted: startingData?._data?.dayStarted || false,
      todaysBlocks: [...startingBlocks],
-    //  todaysBlocks: startingData._data.todaysBlocks ? [...startingData._data.todaysBlocks] :  [],
      async startDay() {
        this.dayStart = Date.now();
        this.dayStarted = true;
@@ -102,7 +56,6 @@ console.log(startingData?._data?.todaysBlocks);
        return new Date(timeElapsed * 1000).toISOString().substring(11, 19);
      },
      async saveChanges() {
-      console.log(this.id);
       const foundDocument = await timerDatabase.days.findOne(this.id).exec();
       await foundDocument?.update({
         $set: {
