@@ -50,17 +50,16 @@ await timerDatabase.addCollections({
 });
 const today = getDateString();
 const startingData = await timerDatabase.days.findOne(today).exec();
-console.log(startingData._data);
 const testMe = () => {
     console.log('test me');
 }
  document.addEventListener('alpine:init', () => {
    
    Alpine.data('timeData', () => ({
-     id: startingData._data.id || '',
-     dayStart: startingData._data.dayStart || 0,
-     lastBlock: startingData._data.lastBlock || 0,
-     dayStarted: startingData._data.dayStarted || false,
+     id: startingData?._data?.id || '',
+     dayStart: startingData?._data?.dayStart || 0,
+     lastBlock: startingData?._data?.lastBlock || 0,
+     dayStarted: startingData?._data?.dayStarted || false,
      todaysBlocks: [],
      async startDay() {
        this.dayStart = Date.now();
