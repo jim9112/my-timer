@@ -102,13 +102,13 @@ console.log(startingData?._data?.todaysBlocks);
        return new Date(timeElapsed * 1000).toISOString().substring(11, 19);
      },
      async saveChanges() {
+      console.log(this.id);
       const foundDocument = await timerDatabase.days.findOne(this.id).exec();
       await foundDocument?.update({
         $set: {
           todaysBlocks: this.todaysBlocks,
         },
       });
-      console.log('save changes');
      },
      resetDay() {
        this.dayStart = 0;
