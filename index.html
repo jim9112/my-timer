@@ -11,7 +11,8 @@
       <span>Hours:</span><span id="hours">00</span><span>Minutes</span><span id="minutes">00</span><span>Seconds</span><span id="seconds">00</span>
     </div> -->
     <div x-data="timeData" class="flex flex-col h-screen px-4 pt-5" x-bind:class="dayStarted ? 'bg-green-700' : 'bg-red-500'">
-    <h1 class="mb-3 text-3xl font-bold text-center">Record Your Time</h1>
+    <h1 x-show="!dayStarted" class="mb-3 text-3xl font-bold text-center" >Record Your Time</h1>
+    <h1 x-show="dayStarted" class="mb-3 text-3xl font-bold text-center" >Your Time is Recording</h1>
       <button x-show="dayStarted === false" x-on:click="startDay()" class="px-1 py-1 border-2 border-black rounded-md" type="button">Start Day</button>
       <button x-show="dayStarted === true" x-on:click="recordBlock()" class="px-1 py-1 border-2 border-black rounded-md" type="button">Record Block</button>
       <ul class="flex-1 overflow-y-scroll">
