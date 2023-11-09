@@ -1,6 +1,6 @@
 import { addRxPlugin, createRxDatabase } from 'rxdb';
-// import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
-// addRxPlugin(RxDBDevModePlugin);
+import { RxDBDevModePlugin } from 'rxdb/plugins/dev-mode';
+addRxPlugin(RxDBDevModePlugin);
 import { RxDBUpdatePlugin } from 'rxdb/plugins/update';
 addRxPlugin(RxDBUpdatePlugin);
 import { getRxStorageDexie } from 'rxdb/plugins/storage-dexie';
