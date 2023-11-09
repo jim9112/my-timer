@@ -6,6 +6,7 @@ import {
   timerDatabase,
   startingData,
   startingBlocks,
+  getDocByDay,
 } from './helpers/db';
  document.addEventListener('alpine:init', () => {
    Alpine.data('timeData', () => ({
@@ -57,11 +58,15 @@ import {
         },
       });
      },
-     resetDay() {
-       this.dayStart = 0;
-       this.lastBlock = 0;
-       this.dayStarted = false;
-       this.todaysBlocks = [];
+     displayPastDay() {
+      const date = new Date();
+      date.setDate(date.getDate() - 2);
+      const dateString = date.toDateString().replaceAll(' ', '-');
+      const getYesterdaysData = async () => {
+        const data = await getDocByDay(dateString);
+        console.log('data', data);
+      }
+      getYesterdaysData();
      },
    }));
  });  

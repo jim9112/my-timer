@@ -13,6 +13,10 @@ let timerDatabase: any;
 let startingData: any;
 const startingBlocks: object[] = []
 
+const getDocByDay = async (day: string) => {
+  return await timerDatabase.days.findOne(day).exec();
+}
+
 const createDb = async () => {
   timerDatabase = await createRxDatabase({
     name: 'timerdatabase',
@@ -23,11 +27,11 @@ const createDb = async () => {
       schema: daySchema,
     },
   });
-  startingData = await timerDatabase.days.findOne(today).exec();
+  startingData = await getDocByDay(today);
   if (startingData?._data?.todaysBlocks) {
     startingData._data.todaysBlocks.forEach((block: object) => {
       startingBlocks.push({...block});
     });
   }
 }
-export { createDb, timerDatabase, startingData, startingBlocks };
+export { createDb, timerDatabase, startingData, startingBlocks, getDocByDay };
